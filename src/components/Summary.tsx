@@ -1,3 +1,4 @@
+import styles from '../../styles/Home.module.css';
 import Header from './Header';
 
 export default function Summary() {
@@ -10,7 +11,7 @@ export default function Summary() {
       <br />
       <div className='w-100'>
         <div className='card bg-light border-0 p-3'>
-          <div className='summary'>
+          <div className={styles.summary}>
             <h5>Arcade (Monthly)</h5>
             <p>
               <a href='#'>Change</a>
@@ -18,22 +19,22 @@ export default function Summary() {
             </p>
           </div>
           <hr />
-          <p className='sub-header small mb-2'>
+          <p className={`${styles.subHeader} small mb-2`}>
             Online service
             <span className='float-right primary-blue-text-color small'>
               +$1/mo
             </span>
           </p>
-          <p className='sub-header small mb-2'>
+          <p className={`${styles.subHeader} small mb-2`}>
             Larger storage
             <span className='float-right primary-blue-text-color small'>
               +$2/mo
             </span>
           </p>
         </div>
-        <p className='sub-header small p-3 mb-2'>
+        <p className={`${styles.subHeader} small p-3 mb-2`}>
           Total (per month)
-          <span className='total'>+$12/mo</span>
+          <span className={styles.total}>+$12/mo</span>
         </p>
       </div>
     </>

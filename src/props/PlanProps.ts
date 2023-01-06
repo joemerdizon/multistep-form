@@ -3,4 +3,6 @@ export type PlanProps = {
   text: string
   price: string
   noOfFreeMonths: number
+  showFreeMonths: boolean
+  active: boolean
 }

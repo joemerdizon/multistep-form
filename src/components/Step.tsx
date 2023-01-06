@@ -4,7 +4,6 @@ import { StepProp } from '../props/StepProps';
 export default function Step(props: StepProp) {
   const { order, text, active } = props;
   return (
-    <a href='index.html'>
       <div className='row pt-4'>
         <div className='col-2'>
           <div className={`${active ? styles.circleActive : styles.circle}`}>
@@ -16,6 +15,5 @@ export default function Step(props: StepProp) {
           <p className={styles.stepDescription}>{text}</p>
         </div>
       </div>
-    </a>
   );
 }

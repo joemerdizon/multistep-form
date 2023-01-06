@@ -264,6 +264,38 @@ input:checked + .slider:before {
   opacity: 1;
 }
 
+.summary > h5 {
+  color: #022656;
+  font-size: 16px !important;
+  font-weight: 700;
+  margin: 0px 0px 3px 0px;
+}
+
+.summary > p > a {
+  color: #919095;
+  text-decoration: underline !important;
+  font-size: 13px;
+  margin: 0px 0px 3px 0px;
+}
+
+.summary > p > a:hover {
+  color: #534aa7;
+}
+
+.summary > p > span {
+  color: #022656;
+  font-size: 14px;
+  font-weight: 700;
+  margin: -10px 0px 3px 0px;
+  float: right;
+}
+
+.total {
+  color: #4a41e5;
+  font-size: 19px;
+  font-weight: 800;
+  float: right;
+}
 
 .main {
   display: flex;

@@ -7,8 +7,23 @@ import Header from './Header';
 import { map } from 'lodash';
 import { plansData } from '../../data/plan.data';
 import Plan from './Plan';
+import React, { useState } from 'react';
 
 export default function SelectPlan() {
+
+  const [showFreeMonths, setShowFreeMonths] = React.useState(true)
+  const [plans, setPlans] = React.useState([]);
+
+
+  function handleToogle(event: React.ChangeEvent<HTMLInputElement>) {
+    if(event.target.checked) {
+      setShowFreeMonths(false)
+    }
+    else {
+      setShowFreeMonths(true)
+    }
+  }
+
   function getPlanImage(plan: string) {
     switch (plan) {
       case 'Arcade': {
@@ -34,6 +49,8 @@ export default function SelectPlan() {
           price={price}
           noOfFreeMonths={noOfFreeMonths}
           imgSrc={getPlanImage(text)}
+          showFreeMonths={showFreeMonths}
+          active={false}
         />
       );
     });
@@ -52,7 +69,7 @@ export default function SelectPlan() {
       <div className={`w-100 bg-light ${styles.planSlider}`}>
         <label>Monthly</label>
         <label className={styles.switch}>
-          <input type='checkbox' />
+          <input type='checkbox' onChange={(e) => handleToogle(e)} />
           <span className={`${styles.slider} ${styles.round}`}></span>
         </label>
         <label className='text-muted'>Yearly</label>

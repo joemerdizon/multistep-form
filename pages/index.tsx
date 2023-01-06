@@ -56,8 +56,10 @@ export default function Home() {
     });
   }
 
-  function handleNext() {
-    setActiveStep(activeStep + 1);
+  function handleNextStep() {
+    if( lte(stepsData.length, 4) ) {
+      setActiveStep(activeStep + 1);
+    }
   }
 
   function handleBack() {
@@ -100,7 +102,7 @@ export default function Home() {
                       ) : null}
                       <button
                         className={`btn ${styles.btnPrimaryCustom} btn-lg float-right`}
-                        onClick={handleNext}
+                        onClick={() => handleNextStep()}
                       >
                         {`${lte(activeStep, 3) ? 'Next Step' : 'Confirm'}`}
                       </button>
