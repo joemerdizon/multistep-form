@@ -196,7 +196,7 @@ export default function Home() {
 
         <div className='attribution mt-5'>
           Challenge by{' '}
-          <a href='https://www.frontendmentor.io?ref=challenge' target='_blank'>
+          <a href='https://www.frontendmentor.io?ref=challenge' target=''>
             Frontend Mentor
           </a>
           . Coded by <a href='#'>Your Name Here</a>.
