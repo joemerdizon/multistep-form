@@ -2,6 +2,8 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import { store } from '../store';
+import { Provider } from 'react-redux';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -26,7 +28,9 @@ export default function App({ Component, pageProps }: AppProps) {
         integrity='sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct'
         crossOrigin='anonymous'
       />
-      <Component {...pageProps} />
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
     </>
   );
 }

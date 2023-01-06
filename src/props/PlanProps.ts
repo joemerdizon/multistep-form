@@ -1,8 +1,9 @@
 export type PlanProps = {
-  imgSrc: string
+  imgSrc?: string
   text: string
-  price: string
+  price: number
   noOfFreeMonths: number
   showFreeMonths: boolean
   active: boolean
+  onClicked?(planType: string, price: number): void
 }

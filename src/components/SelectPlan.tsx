@@ -4,23 +4,55 @@ import proPic from '../../public/icon-pro.svg';
 import advancePic from '../../public/icon-advanced.svg';
 import styles from '../../styles/Home.module.css';
 import Header from './Header';
-import { map } from 'lodash';
+import { get, map, sumBy } from 'lodash';
 import { plansData } from '../../data/plan.data';
 import Plan from './Plan';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { PlanProps } from '../props/PlanProps';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPlan, changeTerm } from '../../slices/createOrderSlice';
+import { RootState } from '../../store';
 
 export default function SelectPlan() {
+  const [showFreeMonths, setShowFreeMonths] = React.useState(true);
+  const [selectedPlan, setSelectedPlan] = React.useState<string>();
+  const [plans, setPlans] = React.useState<PlanProps[]>();
 
-  const [showFreeMonths, setShowFreeMonths] = React.useState(true)
-  const [plans, setPlans] = React.useState([]);
+  const dispatch = useDispatch();
+  const createOrder = useSelector((state: RootState) => state.createOrder);
 
+  useEffect(() => {
+    const plans = map(plansData, (plan) => {
+      const planType = get(createOrder.plan, 'type');
+      return {
+        text: plan.text,
+        price: plan.price,
+        noOfFreeMonths: plan.noOfFreeMonths,
+        showFreeMonths: false,
+        active: planType === plan.text ? true : false,
+      };
+    });
+    setPlans(plans);
+  }, []);
+
+  function handlePlanClick(planType: string, price: number) {
+    const newPlans = map(plans, (plan) => {
+      return {
+        ...plan,
+        active: planType === plan.text ? true : false,
+      };
+    });
+    dispatch(addPlan({ type: planType, price }));
+    setPlans(newPlans);
+  }
 
   function handleToogle(event: React.ChangeEvent<HTMLInputElement>) {
-    if(event.target.checked) {
-      setShowFreeMonths(false)
-    }
-    else {
-      setShowFreeMonths(true)
+    if (event.target.checked) {
+      setShowFreeMonths(false);
+      dispatch(changeTerm('Yearly'));
+    } else {
+      setShowFreeMonths(true);
+      dispatch(changeTerm('Monthly'));
     }
   }
 
@@ -39,8 +71,8 @@ export default function SelectPlan() {
   }
 
   function loadPlans() {
-    return map(plansData, (plan, index) => {
-      const { text, price, noOfFreeMonths } = plan;
+    return map(plans, (plan, index) => {
+      const { text, price, noOfFreeMonths, active } = plan;
 
       return (
         <Plan
@@ -50,7 +82,8 @@ export default function SelectPlan() {
           noOfFreeMonths={noOfFreeMonths}
           imgSrc={getPlanImage(text)}
           showFreeMonths={showFreeMonths}
-          active={false}
+          active={active}
+          onClicked={handlePlanClick}
         />
       );
     });

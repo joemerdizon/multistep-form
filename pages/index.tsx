@@ -5,27 +5,37 @@ import { Ubuntu } from '@next/font/google';
 import styles from '../styles/Home.module.css';
 import Step from '../src/components/Step';
 import { stepsData } from '../data/step.data';
-import { gte, lt, lte, map } from 'lodash';
-import React from 'react';
+import { filter, find, get, gte, isEmpty, lt, lte, map, remove } from 'lodash';
+import React, { useState } from 'react';
 import PersonalInfo from '../src/components/PersonalInfo';
 import SelectPlan from '../src/components/SelectPlan';
 import PickAddOns from '../src/components/PickAddOns';
 import Summary from '../src/components/Summary';
 import ThankYou from '../src/components/ThankYou';
+import { Error } from '../libs/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { PersonalInfoDto } from '../libs/dto/order.dto';
+import { addError, updateErrors } from '../slices/createOrderSlice';
 
 const ubuntu = Ubuntu({ weight: ['400', '700'], subsets: ['latin'] });
 
 export default function Home() {
   const [activeStep, setActiveStep] = React.useState(1);
+  const [errors, setErros] = React.useState<string[]>([]);
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfoDto>();
+
+  const dispatch = useDispatch();
+  const createOrder = useSelector((state: RootState) => state.createOrder);
 
   React.useEffect(() => {
-    console.log(activeStep);
-  }, [activeStep]);
+    setPersonalInfo(createOrder.personalInfo);
+  }, []);
 
   function checkStep() {
     switch (activeStep) {
       case 1: {
-        return <PersonalInfo />;
+        return <PersonalInfo data={personalInfo} erros={errors} />;
       }
       case 2: {
         return <SelectPlan />;
@@ -56,9 +66,79 @@ export default function Home() {
     });
   }
 
+  function validatePersonalInfo(): boolean {
+    let flag: boolean = true;
+    let updatedErrors: string[] = [];
+    const name = get(createOrder.personalInfo, 'name');
+    const email = get(createOrder.personalInfo, 'email');
+    const phoneNumber = get(createOrder.personalInfo, 'phoneNumber');
+
+    console.log(isEmpty(createOrder.errors));
+
+    if (name === '') {
+      !find(createOrder.errors, (err) => err === 'name') &&
+        dispatch(addError('name'));
+      flag = false;
+    } else {
+      updatedErrors = filter(createOrder.errors, (err) => err !== 'name');
+      dispatch(updateErrors(updatedErrors));
+    }
+
+    if (email === '') {
+      !find(createOrder.errors, (err) => err === 'email') &&
+        dispatch(addError('email'));
+      flag = false;
+    } else {
+      updatedErrors = filter(createOrder.errors, (err) => err !== 'email');
+      dispatch(updateErrors(updatedErrors));
+    }
+
+    if (phoneNumber === '') {
+      !find(createOrder.errors, (err) => err === 'phoneNumber') &&
+        dispatch(addError('phoneNumber'));
+      flag = false;
+    } else {
+      updatedErrors = filter(
+        createOrder.errors,
+        (err) => err !== 'phoneNumber'
+      );
+      dispatch(updateErrors(updatedErrors));
+    }
+
+    return flag;
+  }
+
   function handleNextStep() {
-    if( lte(stepsData.length, 4) ) {
-      setActiveStep(activeStep + 1);
+    const isFormValid = validatePersonalInfo();
+
+    /*if (isEmpty(createOrder.personalInfo?.name)) {
+      const errorIsExist = find(errors, (error) => error === 'name');
+      !errorIsExist && setErros([...errors, 'name']);
+    } else {
+      const newErrors = filter(errors, (error) => error !== 'name');
+      setErros(newErrors);
+    }
+
+    if (isEmpty(createOrder.personalInfo?.email)) {
+      const errorIsExist = find(errors, (error) => error === 'email');
+      !errorIsExist && setErros([...errors, 'email']);
+    } else {
+      const newErrors = filter(errors, (error) => error !== 'email');
+      setErros(newErrors);
+    }
+
+    if (isEmpty(createOrder.personalInfo?.phoneNumber)) {
+      const errorIsExist = find(errors, (error) => error === 'phoneNumber');
+      !errorIsExist && setErros([...errors, 'phoneNumber']);
+    } else {
+      const newErrors = filter(errors, (error) => error !== 'phoneNumber');
+      setErros(newErrors);
+    }*/
+
+    if (isFormValid) {
+      if (lte(stepsData.length, 4)) {
+        setActiveStep(activeStep + 1);
+      }
     }
   }
 
